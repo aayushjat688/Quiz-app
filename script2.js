@@ -5,10 +5,18 @@ const a = document.querySelector('.a')
 const b = document.querySelector('.b')
 const c = document.querySelector('.c')
 const d = document.querySelector('.d')
+const queTag = document.querySelector('.no-of-questions p')
+let score = 0;
+let timer;
+let i = 0;
+
+
+const options = document.querySelector('.options')
+      let buttons = options.getElementsByTagName('button')
+      const buttonsArray = [...buttons]
 
 
 
-let queNo = 1;
 let time = 30;
 const aptitudeQuestions = [
   {
@@ -112,27 +120,27 @@ const aptitudeQuestions = [
     answer: "10"
   }
 ];
-let quechecker = 0;
+let quechecker = 1;
+
 function definer(quechecker){
+  if(quechecker==19){
+    document.body.innerHTML = `Your Score : ${score}/20`
+  }
 let noOfQue = aptitudeQuestions[quechecker];
 question.innerHTML = noOfQue.question;
 a.innerHTML = noOfQue.options[0];
 b.innerHTML = noOfQue.options[1];
 c.innerHTML = noOfQue.options[2];
 d.innerHTML = noOfQue.options[3];
-}
-nextButton.addEventListener('click',()=>{
-    definer(quechecker);
-    quechecker++;
-    
-});
+queTag.innerHTML = `${quechecker+1} / ${aptitudeQuestions.length}`;
 
+    if(timer){
+        clearInterval(timer);
+        // null;
+        time=31;
 
-
-
-
-
-    let timer = setInterval(()=>{
+    }
+      timer = setInterval(()=>{
     time--;
     if(time<16){
         document.body.style.backgroundColor = 'rgba(228, 229, 199, 1)';
@@ -144,13 +152,59 @@ nextButton.addEventListener('click',()=>{
         htmlTime.style.backgroundColor = 'rgba(197, 12, 0, 0.43)';
         nextButton.style.color = 'rgba(197, 0,0,1)';
     }
+    if(time==0){
+      
+      buttonsArray.forEach(element => {
+        if(element.innerHTML==aptitudeQuestions[quechecker].answer){
+          element.id='right'
+        }
+      });
+      
+      
+
+    }
 htmlTime.innerHTML = `00:${time < 10 ? '0' + time : time}`
 },1000);
 
-setTimeout(()=>{
+   setTimeout(()=>{
+    time = 30;
     clearInterval(timer);
-    
-},30000);
+   },30000)
+   
+}
+nextButton.addEventListener('click',()=>{
+    definer(quechecker);
+    quechecker++;
+    i++;
+    buttonsArray.forEach((ele)=>{
+      ele.id = '';
+      
+    })
+});
+
+
+
+let opt = document.querySelectorAll('.options button');
+opt.forEach((e)=>{
+  e.addEventListener('click',()=>{
+    if(e.innerHTML == aptitudeQuestions[i].answer){
+      e.id = 'right'
+      score = score + 1;
+      console.log(score);
+    }else{
+      e.id='wrong'
+      buttonsArray.forEach(element => {
+        if(element.innerHTML==aptitudeQuestions[i].answer){
+          element.id='right'
+        }
+      });
+    }
+  })
+})
+
+
+
+definer(0);
 
 
 
